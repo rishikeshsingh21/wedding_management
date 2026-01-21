@@ -1,29 +1,28 @@
-import  {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route,
-    RouterProvider 
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
 } from "react-router-dom";
+
 import PublicLayout from "../layouts/PublicLayout";
-import { Landing } from "../pages";
+import { Landing, Login, RoleSelection, Signup } from "../pages";
 
 const router = createBrowserRouter(
-    createRoutesFromElements(
-        <>
-            <Route path="/" element={<PublicLayout />}>
-                <Route index element={<Landing />} />
-            </Route>
-            {/* <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="*" element={<NotFound />} /> */}
-        </>
-    )
-)
+  createRoutesFromElements(
+    <Route path="/" element={<PublicLayout />}>
+      <Route index element={<Landing />} />
 
-function AppRouter(){
-    return <RouterProvider router = {router}/>;
+      {/* Auth Pages */}
+      <Route path="auth-page" element={<RoleSelection />} />
+      <Route path="login" element={<Login />} />
+      <Route path="signup" element={<Signup />} />
+    </Route>
+  )
+);
+
+function AppRouter() {
+  return <RouterProvider router={router} />;
 }
 
-export default AppRouter
-
-
+export default AppRouter;
