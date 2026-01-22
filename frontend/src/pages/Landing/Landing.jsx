@@ -4,7 +4,7 @@ import {Link} from "react-router-dom"
 
 const Landing = () => {
   return (
-    <div className="bg-gradient-to-br from-pink-50 via-rose-50 to-white text-gray-800">
+    <div className="bg-linear-to-br from-pink-50 via-rose-50 to-white text-gray-800">
 
       {/* HERO SECTION */}
       <section className="relative px-6 py-28 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
