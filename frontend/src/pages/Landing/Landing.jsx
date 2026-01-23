@@ -31,6 +31,7 @@ const Landing = () => {
               </Button>
             </Link>
             <Link to="/login">
+
               <Button variant="outline">
                 Login
               </Button>
@@ -39,7 +40,7 @@ const Landing = () => {
         </div>
 
         {/* Right */}
-        <div className="hidden md:block relative">
+        <div className="hidden md:block relative m-auto">
           <img
             src="/images/landing-hero.png"
             alt="Wedding Couple"
