@@ -5,12 +5,13 @@ import ApiError from "../utils/ApiError.js";
 
 const verifyJWT = AsyncHandler(async(req,res,next)=>{
 
-    const token = req.cookies?.accessToken || req.headers.authorization?.split(" ")[1];
-    //console.log("Token from middleware:",token);
-    if(!token){
-        res.status(401);
-        throw new ApiError("Not authorized, no token");
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new ApiError(401, "Not authorized, token missing");
     }
+
+    const token = authHeader.split(" ")[1];
 
     let decoded;
     
@@ -19,7 +20,7 @@ const verifyJWT = AsyncHandler(async(req,res,next)=>{
         //console.log("Decoded Token",decoded)
     }catch(err){
         res.status(401);
-        throw new ApiError("Not authorized, token failed");
+        throw new ApiError("Not authorized, token failed",err.me);
     }
 
     const user = await User.findById(decoded._id).select("-password -refreshToken");

@@ -39,9 +39,11 @@ const createService = AsyncHandler(async (req, res) => {
     const serviceCount = await Service.countDocuments({
       vendor: vendorId,
     });
-
+    console.log("Vendor Service Count:", serviceCount);
+    console.log("Vendor Approved Status:", isApproved);
     //Restrict unapproved vendors to ONE service
     if (!isApproved && serviceCount >= 1) {
+      console.log("Unapproved vendor tried to add more than one service");
       return res.
       status(403)
       .json(
@@ -54,7 +56,7 @@ const createService = AsyncHandler(async (req, res) => {
 
     let imageUrls = [];
     if (req.files && req.files.length > 0) {
-      imageUrls = await uploadImagesToCloudinary(req.files, "wedding_management/vendor-services");
+      imageUrls = await uploadImagesToCloudinary(req.files, "services/vendor-services");
     }
 
 

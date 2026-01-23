@@ -46,6 +46,17 @@ const serviceSchema = new mongoose.Schema(
       default: "per_event",
     },
 
+    location: {
+      city: String,
+      area: String,
+      address: String,
+      pincode: String,
+    },
+
+    details: {
+      type: mongoose.Schema.Types.Mixed, // category specific details
+    },
+
     images: [
       {
         type: String, // Cloudinary URLs

@@ -22,9 +22,14 @@ app.use(cookieParser())
 
 import userRouter from "./routes/user.route.js"
 import vendorRouter from "./routes/vendor.routes.js"
+import coupleRouter from "./routes/couple.route.js"
+import serviceRouter from "./routes/service.route.js"
+
 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/vendors", vendorRouter)
+app.use("/api/v1/couples", coupleRouter)
+app.use("/api/v1/services",serviceRouter)
 
 
 export default app

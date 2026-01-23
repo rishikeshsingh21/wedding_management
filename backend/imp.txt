@@ -1,0 +1,85 @@
+1📸 Photography
+
+details: {
+  experienceYears: 5,
+  cameraTypes: ["DSLR", "Mirrorless"],
+  editingIncluded: true,
+  droneAvailable: false,
+  albumIncluded: true,
+  candidPhotography: true,
+  deliveryTimeDays: 20
+}
+
+2.🎥 Videography
+details: {
+  experienceYears: 4,
+  videoQuality: ["4K", "1080p"],
+  cinematicStyle: true,
+  droneAvailable: true,
+  teaserVideoIncluded: true,
+  fullVideoLengthMinutes: 120,
+  deliveryTimeDays: 30
+}
+
+Catering
+details: {
+  cuisines: ["Indian", "Chinese", "Continental"],
+  vegOnly: false,
+  maxPlatesPerEvent: 1200,
+  liveCountersAvailable: true,
+  tastingAvailable: true,
+  customMenuAvailable: true,
+  staffIncluded: true
+}
+
+Decoration
+details: {
+  themes: ["Royal", "Floral", "Minimal"],
+  flowerType: ["Fresh", "Artificial"],
+  stageDecorationIncluded: true,
+  lightingIncluded: true,
+  mandapIncluded: true,
+  setupTimeHours: 6
+}
+
+
+Makeup
+details: {
+  makeupType: ["Bridal", "Party", "HD", "Airbrush"],
+  productsUsed: ["MAC", "Huda Beauty", "Lakme"],
+  travelIncluded: true,
+  trialAvailable: true,
+  hairStylingIncluded: true,
+  numberOfLooks: 3
+}
+
+Music / DJ
+details: {
+  musicTypes: ["Bollywood", "EDM", "Punjabi"],
+  djAvailable: true,
+  liveBandAvailable: false,
+  soundSystemIncluded: true,
+  lightingIncluded: true,
+  performanceDurationHours: 5
+}
+
+Venue
+details: {
+  venueType: ["Banquet Hall", "Lawn"],
+  capacity: 800,
+  roomsAvailable: 25,
+  parkingAvailable: true,
+  acAvailable: true,
+  lawnAvailable: true,
+  outsideCateringAllowed: false,
+  alcoholAllowed: true
+}
+
+Other (Custom Services)
+details: {
+  serviceType: "Mehendi Artist",
+  description: "Traditional bridal mehendi",
+  experienceYears: 6,
+  teamSize: 3,
+  customizable: true
+}

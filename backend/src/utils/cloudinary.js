@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config({path: "./.env"});
 import {v2 as cloudinary} from "cloudinary";
 import streamifier from "streamifier";
 import pLimit from "p-limit";
@@ -11,15 +13,7 @@ cloudinary.config({
     secure:true
 });
 
-console.log("Cloudinary Configured:",cloudinary.config().cloud_name);
-console.log("Cloudinary API Key:",cloudinary.config().api_key);
-console.log("Cloudinary Secure:",cloudinary.config().secure);
-
 const uploadSingleImage = (buffer, folder) => {
-  console.log("Cloudinary Configured:",cloudinary.config().cloud_name);
-console.log("Cloudinary API Key:",cloudinary.config().api_key);
-console.log("Cloudinary Secure:",cloudinary.config().secure);
-
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {

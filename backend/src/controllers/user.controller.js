@@ -5,6 +5,7 @@ import AsyncHandler from "../utils/AsyncHandler.js";
 import passwordResetEmailHTML from "../utils/PasswordResetEmailHtml.js";
 import sendEmail from "../utils/SendEmail.js";
 import crypto from "crypto"
+import jwt from "jsonwebtoken"
 
 const generateAccessAndRefreshToken = async (userId) => {
     try{
@@ -45,8 +46,10 @@ const registerUser = AsyncHandler(async (req, res) => {
         )
     }
 
-    const exitingUser = await User.findOne({email})
-
+    const exitingUser = await User.findOne({
+        $or:[{email},{phone}]
+    })
+    //console.log(exitingUser)
     if(exitingUser){
         throw new ApiError(
             409,
@@ -127,6 +130,7 @@ const loginUser = AsyncHandler( async (req, res) => {
     }
 
     const {accessToken, refreshToken} = await generateAccessAndRefreshToken(existingUser._id)
+    console.log("accessToken:",accessToken);
 
     const safeUser = existingUser.toObject()
     delete safeUser.password
@@ -141,7 +145,6 @@ const loginUser = AsyncHandler( async (req, res) => {
 
     return res
         .status(200)
-        .cookie("accessToken",accessToken,options)
         .cookie("refreshToken",refreshToken,options)
         .json(
             new ApiResponse(
@@ -322,11 +325,68 @@ const getUser = AsyncHandler(async (req,res) => {
     )
 })
 
+const refreshAccessToken = AsyncHandler(async (req,res) =>{
+    try {
+    const refreshTokenCookie =
+      req.cookies?.refreshToken || req.body.refreshToken;
+
+    
+    if (!refreshTokenCookie) {
+      throw new ApiError(401, "Refresh token missing");
+    }
+
+    const decoded = jwt.verify(
+      refreshTokenCookie,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    console.log("decoded", decoded)
+
+    const user = await User.findById(decoded._id);
+    
+    if (!user || user.refreshToken !== refreshTokenCookie) {
+      throw new ApiError(403, "Invalid refresh token");
+    }
+    console.log(user)
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    const options = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7*24*60*60*1000
+    }
+    
+    return res
+      .cookie("refreshToken", refreshToken, options)
+      .status(200)
+      .json(
+        new ApiResponse(
+            200,
+            {
+                accessToken: accessToken
+            },
+            "accessToken refesh sucessfully"
+        )
+      );
+
+  } catch (error) {
+    throw new ApiError(
+        401,
+        "Refresh token expired or invalid: Login to renew"
+    )
+  }
+})
+
 export {
     registerUser,
     loginUser,
     logoutUser,
     forgotPassword,
     resetPassword,
-    getUser
+    getUser,
+    refreshAccessToken
 }
