@@ -1,8 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Input } from "../../components";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../api/auth.api";
+
+import {
+  loginStart,
+  loginSuccess,
+  loginFailure,
+} from "../../context/slices/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loading } = useSelector((state) => state.user);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -11,10 +24,33 @@ const Login = () => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // 🔗 API CALL HERE
-    console.log(form);
+    dispatch(loginStart());
+
+    try {
+      const res = await loginUser(form);
+
+      const { user, accessToken } = res.data.data;
+
+      dispatch(
+        loginSuccess({
+          user,
+          token: accessToken,
+        })
+      );
+
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("role", user.role);
+
+      navigate(user.role === "vendor" ? "/" : "/");
+    } catch (error) {
+      dispatch(
+        loginFailure(
+          error?.response?.data?.message || "Login failed"
+        )
+      );
+    }
   };
 
   return (
@@ -60,12 +96,14 @@ const Login = () => {
           </Link>
         </div>
 
+        {/* 🔥 BUTTON STATE */}
         <Button
           type="submit"
           fullWidth
+          disabled={loading}
           className="mt-6"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </Button>
 
         <p className="text-sm text-center mt-4 text-gray-600">

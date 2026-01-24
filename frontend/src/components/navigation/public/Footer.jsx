@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, X } from "lucide-react";
-import logo from "../../assets/logo/logo.jpg";
+import logo from "../../../assets/logo/logo.jpg"
 
 const footerLinks = [
   { name: "About", path: "/about" },

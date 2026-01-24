@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import PublicLayout from "../layouts/PublicLayout";
-import { Landing, Login, RoleSelection, Signup } from "../pages";
+import { CoupleDashboard, Landing, Login, RoleSelection, Signup } from "../pages";
 
 import VendorLayout from "../layouts/VendorLayout";
 import {
@@ -19,6 +19,8 @@ import {
 } from "../pages/Vendor";
 
 import ProtectedRoute from "../components/ProtectedRoute";
+import CoupleLayout from "../layouts/CoupleLayout";
+
 
 
 
@@ -26,14 +28,12 @@ import ProtectedRoute from "../components/ProtectedRoute";
 const router = createBrowserRouter(
   createRoutesFromElements(
      <>
-    <Route path="/" element={<PublicLayout />}>
-      <Route index element={<Landing />} />
-
-      {/* Auth Pages */}
-      <Route path="auth-page" element={<RoleSelection />} />
-      <Route path="login" element={<Login />} />
-      <Route path="signup" element={<Signup />} />
+    <Route path="" element={<PublicLayout />}>
+      <Route path="/" element={<Landing />} />
     </Route>
+    <Route path="/auth-page" element={<RoleSelection />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/signup" element={<Signup />} />
 
          {/* 🧑‍💼 VENDOR ROUTES (SEPARATE LAYOUT) */}
       <Route
@@ -51,6 +51,10 @@ const router = createBrowserRouter(
         <Route path="earnings" element={<Earnings />}/>
         <Route path="profile" element={<Profile />} />
 
+      </Route>
+
+      <Route path="" element={<CoupleLayout/>} >
+        <Route path="/couple" element={<CoupleDashboard/>} />
       </Route>
       </>
   )

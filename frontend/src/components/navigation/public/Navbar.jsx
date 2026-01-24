@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Button } from "../index"
-import logo from "../../assets/logo/logo.jpg";
+import { Button } from "../../index"
+import logo from "../../../assets/logo/logo.jpg";
 
 const Navbar = () => {
   const navItems = [

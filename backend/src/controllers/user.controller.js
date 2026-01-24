@@ -130,7 +130,7 @@ const loginUser = AsyncHandler( async (req, res) => {
     }
 
     const {accessToken, refreshToken} = await generateAccessAndRefreshToken(existingUser._id)
-    console.log("accessToken:",accessToken);
+    //console.log("accessToken:",accessToken);
 
     const safeUser = existingUser.toObject()
     delete safeUser.password

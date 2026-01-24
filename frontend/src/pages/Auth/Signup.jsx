@@ -1,13 +1,22 @@
 import { useState } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Button, Input } from "../../components";
 import { FcGoogle } from "react-icons/fc";
+import { loginUser, registerUser } from "../../api/auth.api";
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+} from "../../context/slices/authSlice";
 
 const Signup = () => {
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  // ROLE FROM QUERY PARAM
+  const { loading } = useSelector((state) => state.user);
+
   const role = params.get("role") || "couple";
 
   const [form, setForm] = useState({
@@ -15,36 +24,53 @@ const Signup = () => {
     email: "",
     phone: "",
     password: "",
+    role,
   });
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // 🔹 NORMAL SIGNUP
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(loginStart());
 
-    // Store role (useful for protected routes later)
-    localStorage.setItem("role", role);
+    try {
+      // 1️⃣ Register
+      await registerUser(form);
 
-    console.log("Manual Signup", { role, ...form });
+      // 2️⃣ Auto login
+      const loginRes = await loginUser({
+        email: form.email,
+        password: form.password,
+      });
 
-    // 🔀 REDIRECT BASED ON ROLE
-    if (role === "vendor") {
-      navigate("/vendor");
-    } else {
-      navigate("/couple"); // you can create this later
+      const { user, accessToken } = loginRes.data.data;
+
+      dispatch(
+        loginSuccess({
+          user,
+          token: accessToken,
+        })
+      );
+      console.log("user:",user)
+      console.log("accessToken:",accessToken)
+
+      localStorage.setItem("role", role);
+      localStorage.setItem("token", accessToken);
+
+      navigate(role === "vendor" ? "/" : "/");
+    } catch (error) {
+      dispatch(
+        loginFailure(
+          error?.response?.data?.message || "Signup failed"
+        )
+      );
     }
   };
 
-  // 🔹 GOOGLE SIGNUP
   const handleGoogleSignup = () => {
     localStorage.setItem("role", role);
-
     console.log("Google Signup", role);
-
-    // Example backend redirect later:
-    // window.location.href = `${API_URL}/auth/google?role=${role}`;
   };
 
   return (
@@ -56,6 +82,7 @@ const Signup = () => {
         <h2 className="text-2xl font-semibold text-[#9E3A4A] text-center">
           Create Your Account
         </h2>
+
         <p className="text-sm text-gray-600 text-center mt-2">
           Signing up as{" "}
           <span className="font-medium capitalize">{role}</span>
@@ -73,19 +100,22 @@ const Signup = () => {
           />
         </div>
 
-        {/* NORMAL SIGNUP */}
-        <Button type="submit" fullWidth className="mt-6">
-          Sign Up
+        {/* 🔥 BUTTON STATE CHANGE */}
+        <Button
+          type="submit"
+          fullWidth
+          disabled={loading}
+          className="mt-6"
+        >
+          {loading ? "Signing up..." : "Sign Up"}
         </Button>
 
-        {/* DIVIDER */}
         <div className="flex items-center my-6">
           <div className="flex-1 h-px bg-gray-300" />
           <span className="px-3 text-sm text-gray-500">OR</span>
           <div className="flex-1 h-px bg-gray-300" />
         </div>
 
-        {/* GOOGLE SIGNUP */}
         <button
           type="button"
           onClick={handleGoogleSignup}
