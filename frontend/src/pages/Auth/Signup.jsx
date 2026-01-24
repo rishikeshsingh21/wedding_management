@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Button, Input } from "../../components";
 import { FcGoogle } from "react-icons/fc";
 
 const Signup = () => {
   const [params] = useSearchParams();
+  const navigate = useNavigate();
+
+  // ROLE FROM QUERY PARAM
   const role = params.get("role") || "couple";
 
   const [form, setForm] = useState({
@@ -17,15 +20,30 @@ const Signup = () => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  // 🔹 NORMAL SIGNUP
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 🔗 NORMAL SIGNUP API
+
+    // Store role (useful for protected routes later)
+    localStorage.setItem("role", role);
+
     console.log("Manual Signup", { role, ...form });
+
+    // 🔀 REDIRECT BASED ON ROLE
+    if (role === "vendor") {
+      navigate("/vendor");
+    } else {
+      navigate("/couple"); // you can create this later
+    }
   };
 
+  // 🔹 GOOGLE SIGNUP
   const handleGoogleSignup = () => {
-    // 🔗 GOOGLE OAUTH API (Backend Redirect)
+    localStorage.setItem("role", role);
+
     console.log("Google Signup", role);
+
+    // Example backend redirect later:
     // window.location.href = `${API_URL}/auth/google?role=${role}`;
   };
 
@@ -39,7 +57,8 @@ const Signup = () => {
           Create Your Account
         </h2>
         <p className="text-sm text-gray-600 text-center mt-2">
-          Signing up as <span className="font-medium capitalize">{role}</span>
+          Signing up as{" "}
+          <span className="font-medium capitalize">{role}</span>
         </p>
 
         <div className="mt-6 space-y-4">
